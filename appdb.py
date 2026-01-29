@@ -1,6 +1,7 @@
 import mysql.connector
 from dotenv import load_dotenv
 import os
+from pydantic import BaseModel
 
 load_dotenv()
 
@@ -22,11 +23,23 @@ db = mysql.connector.connect(
 #                  '("zoro","zoro@gmail.com"),'
 #                  '("sanji","sanji@gmail.com")')
 
-class Users:
+class Users(BaseModel):
+    name = str
+    email = str
     def view(self):
-        dbcursor = db.cursor(dictionary=True)
+        db.ping(reconnect=True)
+        dbcursor = db.cursor(dictionary=True,buffered=True)
         dbcursor.execute('select * from users')
         result=dbcursor.fetchall()
-        print(result)
+        dbcursor.close()
+        return result
+    def add(self,name,email):
+        db.ping(reconnect=True)
+        dbcursor = db.cursor(dictionary=True,buffered=True)
+        querry = 'insert into users(name,email) values(%s,%s)'
+        dbcursor.execute(querry,(name,email,))
+        db.commit()
+        dbcursor.close()
+
 
 

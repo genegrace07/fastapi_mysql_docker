@@ -1,12 +1,13 @@
 from fastapi import FastAPI,HTTPException,status
-from appdb import Users
+from appdb import Users,Usersdb
 
 app = FastAPI()
-usersdb_instance = Users()
+usersdb_instance = Usersdb()
 
 @app.get('/')
 def viewusers():
     return usersdb_instance.view()
+
 @app.post('/adduser')
 def add_user(users:Users):
       userslist=usersdb_instance.view()

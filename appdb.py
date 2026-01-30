@@ -24,8 +24,10 @@ db = mysql.connector.connect(
 #                  '("sanji","sanji@gmail.com")')
 
 class Users(BaseModel):
-    name = str
-    email = str
+    name:str
+    email:str
+
+class Usersdb():
     def view(self):
         db.ping(reconnect=True)
         dbcursor = db.cursor(dictionary=True,buffered=True)

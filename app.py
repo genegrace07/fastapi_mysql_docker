@@ -6,8 +6,10 @@ usersdb_instance = Usersdb()
 
 @app.get('/')
 def viewusers():
-    return usersdb_instance.view()
-
+    userslist = usersdb_instance.view()
+    if not userslist:
+        return {'message': 'empty'}
+    return userslist
 @app.post('/adduser')
 def add_user(users:Users):
       userslist=usersdb_instance.view()
@@ -26,5 +28,16 @@ def update_user(users:Users):
         usersdb_instance.update(users.name, users.email, users.id)
         return {'message': 'successfully updated'}
     raise HTTPException(status_code=404,detail="Not found")
+@app.delete('/deleteuser')
+def delete_user(id):
+    userslist = usersdb_instance.view()
+    if_match = next((u for u in userslist if id == u['id']), None)
+
+    if if_match:
+        usersdb_instance.delete(id)
+        return {'message': 'successfully deleted'}
+    raise HTTPException(status_code=404,detail="Not found")
+
+
 
 

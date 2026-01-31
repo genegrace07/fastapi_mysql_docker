@@ -17,3 +17,14 @@ def add_user(users:Users):
           raise HTTPException(status_code=400,detail='email already exist')
       usersdb_instance.add(users.name,users.email)
       return {'message':'successfully added'}
+@app.patch('/updateuser')
+def update_user(users:Users):
+    userslist = usersdb_instance.view()
+    if_match = next((u for u in userslist if users.id == u['id']), None)
+
+    if if_match:
+        usersdb_instance.update(users.name, users.email, users.id)
+        return {'message': 'successfully updated'}
+    raise HTTPException(status_code=404,detail="Not found")
+
+

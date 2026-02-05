@@ -29,7 +29,7 @@ def update_user(users:Users):
         return {'message': 'successfully updated'}
     raise HTTPException(status_code=404,detail="Not found")
 @app.delete('/deleteuser')
-def delete_user(id):
+def delete_user(id:int):
     userslist = usersdb_instance.view()
     if_match = next((u for u in userslist if id == u['id']), None)
 
